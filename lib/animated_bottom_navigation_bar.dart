@@ -117,6 +117,10 @@ class AnimatedBottomNavigationBar extends StatefulWidget {
 
   static const _defaultSplashRadius = 24.0;
 
+  final bool enableScaleEffect;
+
+  final double iconScale;
+
   AnimatedBottomNavigationBar._internal({
     Key? key,
     required this.activeIndex,
@@ -147,7 +151,9 @@ class AnimatedBottomNavigationBar extends StatefulWidget {
     this.hideAnimationCurve,
     this.hideAnimationController,
     this.backgroundGradient,
+    this.enableScaleEffect = true,
     this.blurEffect = false,
+    this.iconScale = 0,
   })  : assert(icons != null || itemCount != null),
         assert(
           ((itemCount ?? icons!.length) >= 2) &&
@@ -197,7 +203,9 @@ class AnimatedBottomNavigationBar extends StatefulWidget {
     Curve? hideAnimationCurve,
     AnimationController? hideAnimationController,
     Gradient? backgroundGradient,
+    bool enableScaleEffect = true,
     bool blurEffect = false,
+    double iconScale = 0,
   }) : this._internal(
           key: key,
           icons: icons,
@@ -227,6 +235,8 @@ class AnimatedBottomNavigationBar extends StatefulWidget {
           hideAnimationController: hideAnimationController,
           backgroundGradient: backgroundGradient,
           blurEffect: blurEffect,
+          enableScaleEffect: enableScaleEffect,
+          iconScale: iconScale,
         );
 
   AnimatedBottomNavigationBar.builder({
@@ -255,7 +265,9 @@ class AnimatedBottomNavigationBar extends StatefulWidget {
     Curve? hideAnimationCurve,
     AnimationController? hideAnimationController,
     Gradient? backgroundGradient,
+    bool enableScaleEffect = true,
     bool blurEffect = false,
+    double iconScale = 0,
   }) : this._internal(
           key: key,
           tabBuilder: tabBuilder,
@@ -283,6 +295,8 @@ class AnimatedBottomNavigationBar extends StatefulWidget {
           hideAnimationController: hideAnimationController,
           backgroundGradient: backgroundGradient,
           blurEffect: blurEffect,
+          enableScaleEffect: enableScaleEffect,
+          iconScale: iconScale,
         );
 
   @override
@@ -297,7 +311,7 @@ class _AnimatedBottomNavigationBarState
   late AnimationController _bubbleController;
 
   double _bubbleRadius = 0;
-  double _iconScale = 1;
+  // double _iconScale = 1;
 
   @override
   void didChangeDependencies() {
@@ -310,7 +324,8 @@ class _AnimatedBottomNavigationBarState
   @override
   void didUpdateWidget(AnimatedBottomNavigationBar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.activeIndex != oldWidget.activeIndex) {
+    if (widget.enableScaleEffect &&
+        (widget.activeIndex != oldWidget.activeIndex)) {
       _startBubbleAnimation();
     }
   }
@@ -334,11 +349,11 @@ class _AnimatedBottomNavigationBarState
             _bubbleRadius = 0;
           }
 
-          if (bubbleCurve.value < 0.5) {
-            _iconScale = 1 + bubbleCurve.value;
-          } else {
-            _iconScale = 2 - bubbleCurve.value;
-          }
+          // if (bubbleCurve.value < 0.5) {
+          //   _iconScale = 1 + bubbleCurve.value;
+          // } else {
+          //   _iconScale = 2 - bubbleCurve.value;
+          // }
         });
       });
 
@@ -443,7 +458,8 @@ class _AnimatedBottomNavigationBarState
           inactiveColor: widget.inactiveColor,
           child: widget.tabBuilder?.call(i, isActive),
           iconData: widget.icons?.elementAt(i),
-          iconScale: _iconScale,
+          // iconScale: _iconScale,
+          iconScale: widget.iconScale,
           iconSize: widget.iconSize,
           onTap: () => widget.onTap(i),
         ),
