@@ -311,7 +311,7 @@ class _AnimatedBottomNavigationBarState
   late AnimationController _bubbleController;
 
   double _bubbleRadius = 0;
-  // double _iconScale = 1;
+  double _iconScale = 1;
 
   @override
   void didChangeDependencies() {
@@ -349,11 +349,11 @@ class _AnimatedBottomNavigationBarState
             _bubbleRadius = 0;
           }
 
-          // if (bubbleCurve.value < 0.5) {
-          //   _iconScale = 1 + bubbleCurve.value;
-          // } else {
-          //   _iconScale = 2 - bubbleCurve.value;
-          // }
+          if (bubbleCurve.value < 0.5) {
+            _iconScale = 1 + widget.iconScale;
+          } else {
+            _iconScale = 2 - widget.iconScale;
+          }
         });
       });
 
@@ -458,8 +458,7 @@ class _AnimatedBottomNavigationBarState
           inactiveColor: widget.inactiveColor,
           child: widget.tabBuilder?.call(i, isActive),
           iconData: widget.icons?.elementAt(i),
-          // iconScale: _iconScale,
-          iconScale: widget.iconScale,
+          iconScale: _iconScale,
           iconSize: widget.iconSize,
           onTap: () => widget.onTap(i),
         ),
