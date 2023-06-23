@@ -153,7 +153,7 @@ class AnimatedBottomNavigationBar extends StatefulWidget {
     this.backgroundGradient,
     this.enableScaleEffect = true,
     this.blurEffect = false,
-    this.iconScale = 0,
+    this.iconScale = 1,
   })  : assert(icons != null || itemCount != null),
         assert(
           ((itemCount ?? icons!.length) >= 2) &&
@@ -205,7 +205,7 @@ class AnimatedBottomNavigationBar extends StatefulWidget {
     Gradient? backgroundGradient,
     bool enableScaleEffect = true,
     bool blurEffect = false,
-    double iconScale = 0,
+    double iconScale = 1,
   }) : this._internal(
           key: key,
           icons: icons,
@@ -267,7 +267,7 @@ class AnimatedBottomNavigationBar extends StatefulWidget {
     Gradient? backgroundGradient,
     bool enableScaleEffect = true,
     bool blurEffect = false,
-    double iconScale = 0,
+    double iconScale = 1,
   }) : this._internal(
           key: key,
           tabBuilder: tabBuilder,
