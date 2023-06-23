@@ -119,8 +119,6 @@ class AnimatedBottomNavigationBar extends StatefulWidget {
 
   final bool enableScaleEffect;
 
-  final double iconScale;
-
   AnimatedBottomNavigationBar._internal({
     Key? key,
     required this.activeIndex,
@@ -153,7 +151,6 @@ class AnimatedBottomNavigationBar extends StatefulWidget {
     this.backgroundGradient,
     this.enableScaleEffect = true,
     this.blurEffect = false,
-    this.iconScale = 1,
   })  : assert(icons != null || itemCount != null),
         assert(
           ((itemCount ?? icons!.length) >= 2) &&
@@ -161,17 +158,19 @@ class AnimatedBottomNavigationBar extends StatefulWidget {
         ),
         super(key: key) {
     if (gapLocation == GapLocation.end) {
-      if (rightCornerRadius != 0)
+      if (rightCornerRadius != 0) {
         throw NonAppropriatePathException(
             'RightCornerRadius along with ${GapLocation.end} or/and ${FloatingActionButtonLocation.endDocked} causes render issue => '
             'consider set rightCornerRadius to 0.');
+      }
     }
     if (gapLocation == GapLocation.center) {
       final iconsCountIsOdd = (itemCount ?? icons!.length).isOdd;
-      if (iconsCountIsOdd)
+      if (iconsCountIsOdd) {
         throw NonAppropriatePathException(
             'Odd count of icons along with $gapLocation causes render issue => '
             'consider set gapLocation to ${GapLocation.end}');
+      }
     }
   }
 
@@ -205,7 +204,6 @@ class AnimatedBottomNavigationBar extends StatefulWidget {
     Gradient? backgroundGradient,
     bool enableScaleEffect = true,
     bool blurEffect = false,
-    double iconScale = 1,
   }) : this._internal(
           key: key,
           icons: icons,
@@ -236,7 +234,6 @@ class AnimatedBottomNavigationBar extends StatefulWidget {
           backgroundGradient: backgroundGradient,
           blurEffect: blurEffect,
           enableScaleEffect: enableScaleEffect,
-          iconScale: iconScale,
         );
 
   AnimatedBottomNavigationBar.builder({
@@ -267,7 +264,6 @@ class AnimatedBottomNavigationBar extends StatefulWidget {
     Gradient? backgroundGradient,
     bool enableScaleEffect = true,
     bool blurEffect = false,
-    double iconScale = 1,
   }) : this._internal(
           key: key,
           tabBuilder: tabBuilder,
@@ -296,7 +292,6 @@ class AnimatedBottomNavigationBar extends StatefulWidget {
           backgroundGradient: backgroundGradient,
           blurEffect: blurEffect,
           enableScaleEffect: enableScaleEffect,
-          iconScale: iconScale,
         );
 
   @override
@@ -318,7 +313,7 @@ class _AnimatedBottomNavigationBarState
     super.didChangeDependencies();
     geometryListenable = Scaffold.geometryOf(context);
 
-    widget.notchAndCornersAnimation?..addListener(() => setState(() {}));
+    widget.notchAndCornersAnimation?.addListener(() => setState(() {}));
   }
 
   @override
@@ -341,21 +336,20 @@ class _AnimatedBottomNavigationBarState
       curve: Curves.linear,
     );
 
-    Tween<double>(begin: 0, end: 1).animate(bubbleCurve)
-      ..addListener(() {
-        setState(() {
-          _bubbleRadius = widget.splashRadius * bubbleCurve.value;
-          if (_bubbleRadius == widget.splashRadius) {
-            _bubbleRadius = 0;
-          }
+    Tween<double>(begin: 0, end: 1).animate(bubbleCurve).addListener(() {
+      setState(() {
+        _bubbleRadius = widget.splashRadius * bubbleCurve.value;
+        if (_bubbleRadius == widget.splashRadius) {
+          _bubbleRadius = 0;
+        }
 
-          if (bubbleCurve.value < 0.5) {
-            _iconScale = 1 + widget.iconScale;
-          } else {
-            _iconScale = 2 - widget.iconScale;
-          }
-        });
+        if (bubbleCurve.value < .5) {
+          _iconScale = 1 + bubbleCurve.value;
+        } else {
+          _iconScale = 2 - bubbleCurve.value;
+        }
       });
+    });
 
     if (_bubbleController.isAnimating) {
       _bubbleController.reset();
@@ -456,11 +450,11 @@ class _AnimatedBottomNavigationBarState
           bubbleColor: widget.splashColor,
           activeColor: widget.activeColor,
           inactiveColor: widget.inactiveColor,
-          child: widget.tabBuilder?.call(i, isActive),
           iconData: widget.icons?.elementAt(i),
           iconScale: _iconScale,
           iconSize: widget.iconSize,
           onTap: () => widget.onTap(i),
+          child: widget.tabBuilder?.call(i, isActive),
         ),
       );
 
